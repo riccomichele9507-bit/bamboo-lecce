@@ -1,0 +1,20 @@
+# OS / editor
+Thumbs.db
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Vercel
+.vercel
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+dist/
+
+# Temp
+.tmp/
+*.log

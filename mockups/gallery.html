@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bamboo · Mockup Gallery</title>
+<style>
+  :root{
+    --bg:#0b0e0c; --panel:#12171400; --gold:#c9a25a; --gold-soft:#e2c585;
+    --green:#5b8c5a; --text:#f3eee2; --muted:#a7a297; --line:rgba(201,162,90,.2);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;background:
+    radial-gradient(120% 60% at 50% -10%,#18241b,var(--bg) 60%),var(--bg);
+    color:var(--text);min-height:100vh;padding:40px 20px 80px}
+  .head{text-align:center;max-width:760px;margin:0 auto 12px}
+  .brand{font-family:Georgia,serif;font-size:2.6rem;font-weight:700;
+    background:linear-gradient(180deg,#fff,var(--gold-soft) 60%,var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.04em}
+  .sub{color:var(--muted);margin-top:6px}
+  .eyebrow{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+  .styles{max-width:1100px;margin:40px auto 0;display:grid;gap:48px}
+  .style{}
+  .style__head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .style__title{font-family:Georgia,serif;font-size:1.7rem}
+  .badge{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+    padding:5px 12px;border-radius:999px;border:1px solid var(--line)}
+  .badge--pick{background:linear-gradient(135deg,var(--gold-soft),var(--gold));color:#1a1206;border:none;font-weight:700}
+  .style__title .dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:middle}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .shot{background:var(--panel);border:1px solid var(--line);border-radius:22px;
+    padding:10px;overflow:hidden;cursor:zoom-in;transition:transform .18s ease,border-color .2s}
+  .shot:hover{transform:translateY(-4px);border-color:var(--gold)}
+  .shot img{width:100%;border-radius:14px;display:block}
+  .shot__cap{text-align:center;color:var(--muted);font-size:.82rem;padding:10px 0 4px;letter-spacing:.02em}
+  /* lightbox */
+  .lb{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;
+    align-items:center;justify-content:center;z-index:50;padding:24px;cursor:zoom-out}
+  .lb.open{display:flex}
+  .lb img{max-width:min(420px,92vw);max-height:92vh;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:56px}
+  .foot strong{color:var(--gold-soft)}
+</style>
+</head>
+<body>
+  <div class="head">
+    <span class="eyebrow">Vibecoding Designer · Mockup</span>
+    <h1 class="brand">Bamboo</h1>
+    <p class="sub">Bar · Lecce — due direzioni stilistiche a confronto. Tocca per ingrandire.</p>
+  </div>
+
+  <div class="styles">
+    <section class="style">
+      <div class="style__head">
+        <span class="style__title"><span class="dot" style="background:linear-gradient(135deg,#e2c585,#b87333)"></span>Notturno elegante</span>
+        <span class="badge badge--pick">Scelto per il build</span>
+      </div>
+      <div class="grid">
+        <figure class="shot"><img src="notturno_home.png" alt="Notturno Home"><figcaption class="shot__cap">Home / Hero</figcaption></figure>
+        <figure class="shot"><img src="notturno_menu.png" alt="Notturno Menu"><figcaption class="shot__cap">Menu</figcaption></figure>
+        <figure class="shot"><img src="notturno_reserve.png" alt="Notturno Prenotazione"><figcaption class="shot__cap">Prenotazione</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="style">
+      <div class="style__head">
+        <span class="style__title"><span class="dot" style="background:linear-gradient(135deg,#8fbf6a,#3f7d3a)"></span>Bamboo naturale / zen</span>
+        <span class="badge">Variante alternativa</span>
+      </div>
+      <div class="grid">
+        <figure class="shot"><img src="bamboo_home.png" alt="Bamboo Home"><figcaption class="shot__cap">Home / Hero</figcaption></figure>
+        <figure class="shot"><img src="bamboo_menu.png" alt="Bamboo Menu"><figcaption class="shot__cap">Menu</figcaption></figure>
+        <figure class="shot"><img src="bamboo_reserve.png" alt="Bamboo Prenotazione"><figcaption class="shot__cap">Prenotazione</figcaption></figure>
+      </div>
+    </section>
+  </div>
+
+  <p class="foot">Mockup generati con nano-banana (kie.ai) · Demo <strong>Semplifica AI</strong> per Bamboo</p>
+
+  <div class="lb" id="lb"><img id="lbImg" src="" alt=""></div>
+  <script>
+    const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg');
+    document.querySelectorAll('.shot img').forEach(img=>{
+      img.addEventListener('click',()=>{lbImg.src=img.src;lb.classList.add('open')});
+    });
+    lb.addEventListener('click',()=>lb.classList.remove('open'));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open')});
+  </script>
+</body>
+</html>
