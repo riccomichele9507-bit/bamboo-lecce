@@ -44,7 +44,14 @@ export default function ReservePage() {
 
   const slots = useMemo(() => getSlots(date), [date]);
 
-  const canSubmit = Boolean(date && slot && people && nome.trim() && phone.trim());
+  // Domenica chiuso: getSlots ritorna [] se il giorno è domenica
+  const isSunday = useMemo(() => {
+    if (!date) return false;
+    const [y, m, d] = date.split('-').map(Number);
+    return new Date(y, m - 1, d).getDay() === 0;
+  }, [date]);
+
+  const canSubmit = Boolean(date && slot && people && nome.trim() && phone.trim() && !isSunday);
 
   const onChangeDate = (v: string) => {
     setDate(v);
@@ -56,6 +63,7 @@ export default function ReservePage() {
     e.preventDefault();
     setError('');
     if (!date) return setError('Scegli una data.');
+    if (isSunday) return setError('Siamo chiusi la domenica. Scegli un altro giorno.');
     if (!slot) return setError('Scegli un orario disponibile.');
     if (!nome.trim()) return setError('Inserisci il nome.');
     if (!phone.trim()) return setError('Inserisci un numero di telefono.');
@@ -139,7 +147,7 @@ export default function ReservePage() {
           </div>
 
           <p style={{ color: COLORS.textMuted, fontSize: 13, margin: 0 }}>
-            Ti aspettiamo da {VENUE.name} · {VENUE.hours}
+            Ti aspettiamo da {VENUE.name} · Lun–Sab 07:00–23:00
           </p>
 
           <button
@@ -167,7 +175,7 @@ export default function ReservePage() {
         Prenota un tavolo
       </h1>
       <p style={{ color: COLORS.textSecondary, margin: '0 0 24px', maxWidth: '38ch' }}>
-        Scegli data e orario: confermi tu, subito.
+        Scegli data e orario.
       </p>
 
       <form onSubmit={submit} style={{ display: 'grid', gap: 22 }}>
@@ -186,41 +194,57 @@ export default function ReservePage() {
         {/* Orario / slot chips */}
         <div>
           <label style={labelStyle}>Orario disponibile</label>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 9 }}>
-            {slots.map((s) => {
-              const selected = slot === s.time;
-              return (
-                <button
-                  key={s.time}
-                  type="button"
-                  disabled={!s.available}
-                  onClick={() => { setSlot(s.time); setError(''); }}
-                  style={{
-                    padding: '11px 0',
-                    fontSize: 14.5,
-                    fontWeight: selected ? 700 : 500,
-                    borderRadius: RADIUS.md,
-                    cursor: s.available ? 'pointer' : 'not-allowed',
-                    border: `1px solid ${selected ? 'transparent' : COLORS.border}`,
-                    background: selected
-                      ? COLORS.gradient
-                      : s.available ? COLORS.cardBg : 'transparent',
-                    color: selected
-                      ? '#1a1206'
-                      : s.available ? COLORS.textPrimary : COLORS.textMuted,
-                    textDecoration: s.available ? 'none' : 'line-through',
-                    opacity: s.available ? 1 : 0.5,
-                    transition: 'all .15s ease',
-                  }}
-                >
-                  {s.time}
-                </button>
-              );
-            })}
-          </div>
-          <p style={{ fontSize: 12, color: COLORS.textMuted, margin: '8px 0 0' }}>
-            Gli orari barrati (<span style={{ textDecoration: 'line-through' }}>esaurito</span>) non sono prenotabili.
-          </p>
+          {isSunday ? (
+            <div style={{
+              padding: '18px 16px',
+              borderRadius: RADIUS.md,
+              border: `1px solid ${COLORS.border}`,
+              background: COLORS.cardBg,
+              color: COLORS.textSecondary,
+              fontSize: 14.5,
+              textAlign: 'center',
+            }}>
+              🚫 Chiuso la domenica — scegli un altro giorno
+            </div>
+          ) : (
+            <>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 9 }}>
+                {slots.map((s) => {
+                  const selected = slot === s.time;
+                  return (
+                    <button
+                      key={s.time}
+                      type="button"
+                      disabled={!s.available}
+                      onClick={() => { setSlot(s.time); setError(''); }}
+                      style={{
+                        padding: '11px 0',
+                        fontSize: 14.5,
+                        fontWeight: selected ? 700 : 500,
+                        borderRadius: RADIUS.md,
+                        cursor: s.available ? 'pointer' : 'not-allowed',
+                        border: `1px solid ${selected ? 'transparent' : COLORS.border}`,
+                        background: selected
+                          ? COLORS.gradient
+                          : s.available ? COLORS.cardBg : 'transparent',
+                        color: selected
+                          ? '#1a1206'
+                          : s.available ? COLORS.textPrimary : COLORS.textMuted,
+                        textDecoration: s.available ? 'none' : 'line-through',
+                        opacity: s.available ? 1 : 0.5,
+                        transition: 'all .15s ease',
+                      }}
+                    >
+                      {s.time}
+                    </button>
+                  );
+                })}
+              </div>
+              <p style={{ fontSize: 12, color: COLORS.textMuted, margin: '8px 0 0' }}>
+                Gli orari barrati (<span style={{ textDecoration: 'line-through' }}>esaurito</span>) non sono prenotabili.
+              </p>
+            </>
+          )}
         </div>
 
         {/* Persone chips */}
@@ -314,7 +338,7 @@ export default function ReservePage() {
         </button>
 
         <p style={{ textAlign: 'center', color: COLORS.textSecondary, fontSize: 13, margin: 0 }}>
-          Aperto tutti i giorni · {VENUE.hours}
+          Lun–Sab 07:00–23:00 · Domenica chiuso
         </p>
       </form>
     </div>

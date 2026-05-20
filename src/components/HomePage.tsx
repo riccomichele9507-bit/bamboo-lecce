@@ -124,7 +124,7 @@ export default function HomePage({ onNavigate }: { onNavigate: (p: Page) => void
       {/* INFO */}
       <section style={{ padding: '30px 22px 40px', color: COLORS.textSecondary }}>
         <div style={{ borderTop: `1px solid ${COLORS.border}`, paddingTop: 22, display: 'grid', gap: 8, fontSize: 14.5 }}>
-          <div>🕒 Aperto tutti i giorni · {VENUE.hours}</div>
+          <div>🕒 Lun–Sab · 07:00–23:00 · Domenica chiuso</div>
           <div>📍 {VENUE.address}</div>
         </div>
       </section>

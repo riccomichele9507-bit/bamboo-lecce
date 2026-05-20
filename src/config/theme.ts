@@ -27,13 +27,14 @@ export const RADIUS = { lg: '18px', md: '14px', pill: '999px' };
 
 // Dati locale (placeholder dove indicato — da confermare col cliente)
 export const VENUE = {
-  name: 'Bamboo',
-  city: 'Lecce',
-  tagline: 'Drink d’autore, taglieri e piadine.',
-  subtitle: 'Il tuo angolo serale nel cuore di Lecce.',
-  hours: '18:00 – 02:00',
+  name: "Bamboo",
+  city: "Lecce",
+  tagline: "Drink d’autore, taglieri e piadine.",
+  subtitle: "Il tuo angolo serale nel cuore di Lecce.",
+  hours: "07:00 – 23:00",
+  closedDay: "Domenica",
   // >>> SOSTITUIRE con il numero WhatsApp REALE (formato internazionale, no +, no spazi)
-  whatsappNumber: '390000000000',
-  address: 'Indirizzo da confermare · Lecce',
-  instagram: '', // es. 'https://instagram.com/bamboo.lecce'
+  whatsappNumber: "390000000000",
+  address: "Via Michelangelo Schipa, 2 · 73100 Lecce",
+  instagram: "", // es. "https://instagram.com/bamboo.lecce"
 };

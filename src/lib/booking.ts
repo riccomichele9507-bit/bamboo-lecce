@@ -21,20 +21,29 @@ export interface Booking {
 export type BookingResult = Pick<Booking, 'id' | 'createdAt'>;
 
 /**
- * Genera gli slot serali per una data (19:00–23:30, step 30 min).
+ * Genera gli slot per la prenotazione tavoli per una data.
+ * Orari: 18:00–22:30, step 30 min (ultimo slot 22:30 — il locale chiude alle 23:00).
  * La disponibilità è deterministica: hash della data + indice slot
  * così ogni giorno ha sempre lo stesso pattern di slot liberi/occupati.
- * ~30% degli slot risultano non disponibili per rendere il demo realistico.
+ * ~25-35% degli slot risultano non disponibili per rendere il demo realistico.
+ * DOMENICA = CHIUSO: se la data è domenica, ritorna lista vuota.
  */
 export function getSlots(dateISO: string): Slot[] {
-  const times: string[] = [];
-  for (let h = 19; h <= 23; h++) {
-    times.push(`${String(h).padStart(2, '0')}:00`);
-    if (h <= 23) times.push(`${String(h).padStart(2, '0')}:30`);
+  // Domenica chiuso — ritorna lista vuota
+  if (dateISO) {
+    const [y, m, d] = dateISO.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    if (date.getDay() === 0) return [];
   }
-  // Rimuove "00:00" generato dall'ultimo iteration (h=24 non raggiunto)
-  // e rimuove il doppio 23:30
-  const unique = [...new Set(times)];
+
+  // Slot 18:00 → 22:30, ogni 30 minuti
+  const times: string[] = [];
+  for (let h = 18; h <= 22; h++) {
+    times.push(`${String(h).padStart(2, '0')}:00`);
+    times.push(`${String(h).padStart(2, '0')}:30`);
+  }
+  // Rimuove "23:00" — il locale chiude alle 23:00, l'ultimo slot è 22:30
+  // (il loop termina a 22:30, quindi non serve rimuovere nulla)
 
   // Hash semplice della stringa data per seed deterministico
   let seed = 0;
@@ -42,10 +51,10 @@ export function getSlots(dateISO: string): Slot[] {
     seed = (seed * 31 + dateISO.charCodeAt(i)) >>> 0;
   }
 
-  return unique.map((time, i) => {
-    // ~30% degli slot sono occupati, determinato dal seed + indice
+  return times.map((time, i) => {
+    // ~25-35% degli slot sono occupati, determinato dal seed + indice
     const h = ((seed ^ (i * 2654435761)) >>> 0) % 100;
-    return { time, available: h > 28 };
+    return { time, available: h > 30 };
   });
 }
 
